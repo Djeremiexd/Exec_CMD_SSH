@@ -10,13 +10,16 @@ def setup_ssh_connection(host, username, password):
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
         client.connect(host, username=username, password=password)
+        return client
     except paramiko.AuthenticationException:
-        logging.error(f"Authentication failed for {host}. Please check your credentials.")
-        raise
+        error_msg = f"Authentication failed for {host}. Please check your credentials."
+        logging.error(error_msg)
+        print(error_msg)
     except Exception as e:
-        logging.error(f"Error connecting to {host}: {e}")
-        raise
-    return client
+        error_msg = f"Error connecting to {host}: {e}"
+        logging.error(error_msg)
+        print(error_msg)
+    return None
 
 def execute_ssh_commands(client, command_file, output_file):
     try:
